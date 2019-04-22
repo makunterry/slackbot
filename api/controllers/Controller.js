@@ -25,6 +25,6 @@ exports.welcome = function(req, res) {
 
 exports.botcallback = function(req, res) {
     reqlog(logfile1, req);
-    //res.send(req.body.challenge);
-    res.json(req.body);
+    res.send(req.body.challenge);
+    //res.json(req.body);
 };
