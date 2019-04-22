@@ -37,6 +37,7 @@ exports.command = function(req, res) {
         fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
         
         var newreq = http.request(options, function(res) {
+            fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
 
         });
         newreq.write(contents);
