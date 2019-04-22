@@ -1,11 +1,14 @@
 'use strict';
 
+var fs = require('fs');
+var logfile = './log/console.log';
+
 exports.command = function(req, res) {
-    console.log('===================== params ============================');
-    console.log(req.params);
-    console.log('===================== query ============================');
-    console.log(req.query);
-    console.log('===================== ***** ============================');
+    fs.writeFileSync(logfile,'===================== params ============================');
+    fs.writeFileSync(logfile, req.params);
+    fs.writeFileSync(logfile,'===================== query ============================');
+    fs.writeFileSync(logfile, req.query);
+    fs.writeFileSync(logfile,"===================== ***** ============================\n\n");
     res.sendStatus(200);
 };
 
