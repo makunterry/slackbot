@@ -8,3 +8,7 @@ exports.command = function(req, res) {
     console.log('===================== ***** ============================');
     res.sendStatus(200);
 };
+
+exports.welcome = function(req, res) {
+    res.send("Hello world!");
+};

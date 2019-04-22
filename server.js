@@ -1,7 +1,7 @@
 var express = require('express'),
     routes = require('./api/routes/Route'),
     app = express(),
-    port = 80;
+    port = process.env.PORT || 3000;
 
 routes(app);
 app.listen(port);

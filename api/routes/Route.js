@@ -6,4 +6,7 @@ module.exports = function(app) {
     app.route('/command')
         .get(cntrl.command)
         .post(cntrl.command);
+
+    app.route('/')
+        .get(cntrl.welcome);
 };
