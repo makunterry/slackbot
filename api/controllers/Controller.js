@@ -15,3 +15,7 @@ exports.command = function(req, res) {
 exports.welcome = function(req, res) {
     res.send("Hello world!");
 };
+
+exports.botcallback = function(req, res) {
+    res.json(req.body);
+};

@@ -9,4 +9,8 @@ module.exports = function(app) {
 
     app.route('/')
         .get(cntrl.welcome);
+
+    app.route('/botcallback')
+        .get(cntrl.botcallback)
+        .post(cntrl.botcallback);
 };
