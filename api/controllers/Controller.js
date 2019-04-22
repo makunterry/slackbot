@@ -24,6 +24,7 @@ exports.command = function(req, res) {
         var contents = '{"text":"Command handled OK"}';
         var options = {
             host:urlobject.host,
+            port:443,
             path:urlobject.path,
             method:'POST',
             headers:{
