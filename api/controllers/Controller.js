@@ -2,8 +2,7 @@
 
 var fs = require('fs');
 var util = require('util');
-var logfile0 = './command.log';
-var logfile1 = './botcallback.log';
+var logfile = './log.log';
 
 function reqlog(filename, req, title) {
     fs.writeFileSync(filename,util.format('*************************** Request to %s ***************************\n', title), {flag:'a+'});
@@ -17,7 +16,7 @@ function reqlog(filename, req, title) {
 };
 
 exports.command = function(req, res) {
-    reqlog(logfile0, req, 'command');
+    reqlog(logfile, req, 'command');
     res.sendStatus(200);
 };
 
@@ -26,6 +25,6 @@ exports.welcome = function(req, res) {
 };
 
 exports.botcallback = function(req, res) {
-    reqlog(logfile1, req, 'botcallback');
+    reqlog(logfile, req, 'botcallback');
     res.send(req.body.challenge);
 };
