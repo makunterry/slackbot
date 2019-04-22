@@ -17,5 +17,5 @@ exports.welcome = function(req, res) {
 };
 
 exports.botcallback = function(req, res) {
-    res.json(req.body);
+    res.send(req.body.challenge);
 };
