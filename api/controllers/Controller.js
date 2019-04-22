@@ -6,5 +6,5 @@ exports.command = function(req, res) {
     console.log('===================== query ============================');
     console.log(req.query);
     console.log('===================== ***** ============================');
-    res.send('Hey');
+    res.sendStatus(200);
 };
