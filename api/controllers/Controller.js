@@ -39,7 +39,7 @@ exports.command = function(req, res) {
 
         });
         newreq.write(contents);
-        newreq.end;
+        newreq.end();
     }
     res.sendStatus(200);
 };
