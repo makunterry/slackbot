@@ -31,6 +31,10 @@ exports.command = function(req, res) {
                 'content-length':contents.length
             }
         };
+        fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
+        fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
+        fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
+        
         var newreq = http.request(options, function(res) {
 
         });
