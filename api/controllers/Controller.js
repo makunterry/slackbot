@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var logfile = './log/console.log';
+var logfile = './console.log';
 
 exports.command = function(req, res) {
     fs.writeFileSync(logfile,'===================== params ============================');
