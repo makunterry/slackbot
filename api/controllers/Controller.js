@@ -3,7 +3,7 @@
 var fs = require('fs');
 var util = require('util');
 var url = require('url');
-var http = require('http');
+var http = require('https');
 var logfile = './log.log';
 
 function reqlog(filename, req, title) {
@@ -24,12 +24,10 @@ exports.command = function(req, res) {
         var contents = '{"text":"Command handled OK"}';
         var options = {
             host:urlobject.host,
-            port:443,
             path:urlobject.path,
             method:'POST',
             headers:{
-                'content-type':'application/json',
-                'content-length':contents.length
+                "Content-Type": "application/json"
             }
         };
         fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
