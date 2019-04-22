@@ -9,7 +9,7 @@ exports.command = function(req, res) {
     fs.writeFileSync(logfile,'===================== query ============================\n', {flag:'a+'});
     fs.writeFileSync(logfile, JSON.stringify(req.query), {flag:'a+'});
     fs.writeFileSync(logfile,"===================== ***** ============================\n\n", {flag:'a+'});
-    res.sendStatus(200);
+    res.send(JSON.stringify(req.query));
 };
 
 exports.welcome = function(req, res) {
