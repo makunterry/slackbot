@@ -17,11 +17,38 @@ function reqlog(filename, req, title) {
     fs.writeFileSync(filename,"\n******************************************************\n\n", {flag:'a+'});
 };
 
-exports.command = function(req, res) {
-    reqlog(logfile, req, 'command');
+exports.tr_enable = function(req, res) {
+    reqlog(logfile, req, 'tr_enable');
     if (req.body.response_url != undefined) {
         var urlobject = url.parse(req.body.response_url);
-        var contents = '{"text":"Command handled OK"}';
+        var contents = '{"text":"tr_enable handled OK"}';
+        var options = {
+            host:urlobject.host,
+            path:urlobject.path,
+            method:'POST',
+            headers:{
+                "Content-Type": "application/json"
+            }
+        };
+        fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
+        fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
+        fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
+        
+        var newreq = http.request(options, function(res) {
+            fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
+
+        });
+        newreq.write(contents);
+        newreq.end();
+    }
+    res.sendStatus(200);
+};
+
+exports.tr_disable = function(req, res) {
+    reqlog(logfile, req, 'tr_disable');
+    if (req.body.response_url != undefined) {
+        var urlobject = url.parse(req.body.response_url);
+        var contents = '{"text":"tr_disable handled OK"}';
         var options = {
             host:urlobject.host,
             path:urlobject.path,

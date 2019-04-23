@@ -3,9 +3,11 @@
 module.exports = function(app) {
     var cntrl = require('../controllers/Controller');
 
-    app.route('/command')
-        .get(cntrl.command)
-        .post(cntrl.command);
+    app.route('/tr_enable')
+        .post(cntrl.tr_enable);
+
+    app.route('/tr_disable')
+        .post(cntrl.tr_disable);
 
     app.route('/')
         .get(cntrl.welcome);
