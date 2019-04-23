@@ -112,7 +112,7 @@ exports.tr_status = function(req, res) {
 
     https.get(wemreq_url, function(res) {
         fs.writeFileSync(logfile, "\n------------------> tr_status res.body <-------------------------\n", {flag:'a+'});
-        fs.writeFileSync(logfile, JSON.stringify(res.body), {flag:'a+'});
+        fs.writeFileSync(logfile, JSON.stringify(res), {flag:'a+'});
         fs.writeFileSync(logfile, "\n------------------> tr_status res.body end <-------------------------\n", {flag:'a+'});
 
         if (req.body.response_url != undefined) {
