@@ -122,16 +122,16 @@ exports.tr_status = function(req, res) {
             try {
                 const v = JSON.parse(a).Results;
                 const r = v.filter(function(x) { return x.IdItem === 40 })[0].Value;
-                console.log(r);
+                // console.log(r);
 
                 if (req.body.response_url != undefined) {
-                    var urlobject = url.parse(req.body.response_url);
-                    var contents = '{"text":"Transformer Status: Enabled"}';
+                    let urlobject = url.parse(req.body.response_url);
+                    let contents = '{"text":"Transformer Status","attachments":[{"text":"Enabled"}]}';
                     if (r === '0') {
-                        contents = '{"text":"Transformer Status: Disabled"}';
+                        contents = '{"text":"Transformer Status","attachments":[{"text":"Disabled"}]}';
                     }
 
-                    var options = {
+                    let options = {
                         host:urlobject.host,
                         path:urlobject.path,
                         method:'POST',
