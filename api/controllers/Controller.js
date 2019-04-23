@@ -126,9 +126,9 @@ exports.tr_status = function(req, res) {
 
                 if (req.body.response_url != undefined) {
                     let urlobject = url.parse(req.body.response_url);
-                    let contents = '{"text":"Transformer Status","attachments":[{"text":"Enabled"}]}';
+                    let contents = '{"text":":\'ml:Transformer Status","attachments":[{"text":"Enabled"}]}';
                     if (r === '0') {
-                        contents = '{"text":"Transformer Status","attachments":[{"text":"Disabled"}]}';
+                        contents = '{"text":":\'ml:Transformer Status","attachments":[{"text":"Disabled"}]}';
                     }
 
                     let options = {
