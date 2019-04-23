@@ -115,43 +115,46 @@ exports.tr_status = function(req, res) {
         fs.writeFileSync(logfile, util.format("res.statusCode %s\n", res.statusCode), {flag:'a+'});
         fs.writeFileSync(logfile, "\n------------------> tr_status res.statuscode end <-------------------------\n", {flag:'a+'});
 
-        res.on('data', function(d) {
-            var wembody = JSON.parse(d);
-            fs.writeFileSync(logfile, "\n------------------> tr_status res.body <-------------------------\n", {flag:'a+'});
-            fs.writeFileSync(logfile, JSON.stringify(wembody), {flag:'a+'});
-            fs.writeFileSync(logfile, "\n------------------> tr_status res.body end <-------------------------\n", {flag:'a+'});
-            if (req.body.response_url != undefined) {
-                var urlobject = url.parse(req.body.response_url);
-                var contents = '{"text":"Transformer Status: Enabled"}';
+        let a = "";
+        res.on('data', (d) => {
+            const temp  = String.fromCharCode.apply(null, d);
+            a += temp;
+            try {
+                const v = JSON.parse(a).Results;
+                const r = v.filter(function(x) { return x.IdItem === 40 })[0].Value;
+                console.log(r);
 
-                var trStatus = wembody.Results.filter(function(x) {
-                    return x.IdItem == 40
-                })[0].Value;
-                if (trStatus == 0) {
-                    contents = '{"text":"Transformer Status: Disabled"}';
-                }
-
-                var options = {
-                    host:urlobject.host,
-                    path:urlobject.path,
-                    method:'POST',
-                    headers:{
-                        "Content-Type": "application/json"
+                if (req.body.response_url != undefined) {
+                    var urlobject = url.parse(req.body.response_url);
+                    var contents = '{"text":"Transformer Status: Enabled"}';
+                    if (r === '0') {
+                        contents = '{"text":"Transformer Status: Disabled"}';
                     }
-                };
-                fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
-                fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
-                fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
-                
-                var newreq = https.request(options, function(res) {
-                    fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
 
-                });
-                newreq.write(contents);
-                newreq.end();
+                    var options = {
+                        host:urlobject.host,
+                        path:urlobject.path,
+                        method:'POST',
+                        headers:{
+                            "Content-Type": "application/json"
+                        }
+                    };
+                    fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
+                    fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
+                    fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
+
+                    var newreq = https.request(options, function(res) {
+                        fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
+
+                    });
+                    newreq.write(contents);
+                    newreq.end();
+                }
+            } catch(e) {
+                // console.error(e);
             }
-
         });
+
     });
 }
 
