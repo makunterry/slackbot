@@ -19,6 +19,7 @@ function reqlog(filename, req, title) {
 
 exports.tr_enable = function(req, res) {
     reqlog(logfile, req, 'tr_enable');
+    res.sendStatus(200);
     if (req.body.response_url != undefined) {
         var urlobject = url.parse(req.body.response_url);
         var contents = '{"text":"tr_enable handled OK"}';
@@ -41,11 +42,11 @@ exports.tr_enable = function(req, res) {
         newreq.write(contents);
         newreq.end();
     }
-    res.sendStatus(200);
 };
 
 exports.tr_disable = function(req, res) {
     reqlog(logfile, req, 'tr_disable');
+    res.sendStatus(200);
     if (req.body.response_url != undefined) {
         var urlobject = url.parse(req.body.response_url);
         var contents = '{"text":"tr_disable handled OK"}';
@@ -68,7 +69,6 @@ exports.tr_disable = function(req, res) {
         newreq.write(contents);
         newreq.end();
     }
-    res.sendStatus(200);
 };
 
 exports.welcome = function(req, res) {
