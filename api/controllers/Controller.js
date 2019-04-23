@@ -3,7 +3,7 @@
 var fs = require('fs');
 var util = require('util');
 var url = require('url');
-var http = require('https');
+var https = require('https');
 var logfile = './log.log';
 
 var wemreq_template = '{"State": 0,"Type": 0,"IdItem": 40,"IdSite": 1,"RevisionId": 1,"Name": "IsKioskEnabled","Value": "%d","Reserved01": ""}';
@@ -30,7 +30,7 @@ function wemtransformer(enable, f) {
                 "Content-Type": "application/json"
             }
     };
-    var wemreq = http.request(wemreq_options, function(res) {
+    var wemreq = https.request(wemreq_options, function(res) {
         if (f != undefined) {
             f(res);
         }
@@ -62,7 +62,7 @@ exports.tr_enable = function(req, res) {
             fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
             fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
             
-            var newreq = http.request(options, function(res) {
+            var newreq = https.request(options, function(res) {
                 fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
 
             });
@@ -96,7 +96,7 @@ exports.tr_disable = function(req, res) {
             fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
             fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
             
-            var newreq = http.request(options, function(res) {
+            var newreq = https.request(options, function(res) {
                 fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
 
             });
@@ -105,6 +105,44 @@ exports.tr_disable = function(req, res) {
         }
     });
 };
+
+exports.tr_status = function(req, res) {
+    reqlog(logfile, req, 'Get transformer status');
+    res.sendStatus(200);
+
+    https.get(wemreq_url, function(res) {
+        if (req.body.response_url != undefined) {
+            var urlobject = url.parse(req.body.response_url);
+            var contents = '{"text":"Transformer Status: Enabled"}';
+
+            var trStatus = res.body.Results.filter(function(x) {
+                return x.IdItem == 40
+            })[0].Value;
+            if (trStatus == 0) {
+                contents = '{"text":"Transformer Status: Disabled"}';
+            }
+
+            var options = {
+                host:urlobject.host,
+                path:urlobject.path,
+                method:'POST',
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            };
+            fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
+            fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
+            fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
+            
+            var newreq = https.request(options, function(res) {
+                fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
+
+            });
+            newreq.write(contents);
+            newreq.end();
+        }
+    });
+}
 
 exports.welcome = function(req, res) {
     res.send("Hello world!");

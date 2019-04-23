@@ -9,6 +9,9 @@ module.exports = function(app) {
     app.route('/tr_disable')
         .post(cntrl.tr_disable);
 
+    app.route('/tr_status')
+        .post(cntrl.tr_status);
+
     app.route('/')
         .get(cntrl.welcome);
 
