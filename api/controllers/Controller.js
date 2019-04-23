@@ -6,6 +6,9 @@ var url = require('url');
 var http = require('https');
 var logfile = './log.log';
 
+var wemreq_template = '{"State": 0,"Type": 0,"IdItem": 40,"IdSite": 1,"RevisionId": 1,"Name": "IsKioskEnabled","Value": "%d","Reserved01": ""}';
+var wemreq_url = 'https://sq3uvba45hso63vk6n332ds7tu3mdqun.wem.cloudburrito.com/api/v1.0/kiosk-settings';
+
 function reqlog(filename, req, title) {
     fs.writeFileSync(filename,util.format('*************************** Request to %s ***************************\n', title), {flag:'a+'});
     fs.writeFileSync(filename,'===================== params ============================\n', {flag:'a+'});
@@ -17,58 +20,90 @@ function reqlog(filename, req, title) {
     fs.writeFileSync(filename,"\n******************************************************\n\n", {flag:'a+'});
 };
 
-exports.tr_enable = function(req, res) {
-    reqlog(logfile, req, 'tr_enable');
-    res.sendStatus(200);
-    if (req.body.response_url != undefined) {
-        var urlobject = url.parse(req.body.response_url);
-        var contents = '{"text":"tr_enable handled OK"}';
-        var options = {
-            host:urlobject.host,
-            path:urlobject.path,
-            method:'POST',
+function wemtransformer(enable, f) {
+    var wemreq_urlobject = url.parse(wemreq_url);
+    var wemreq_options = {
+            host:wemreq_urlobject.host,
+            path:wemreq_urlobject.path,
+            method:'PUT',
             headers:{
                 "Content-Type": "application/json"
             }
-        };
-        fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
-        fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
-        fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
-        
-        var newreq = http.request(options, function(res) {
-            fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
+    };
+    var wemreq = http.request(wemreq_options, function(res) {
+        if (f != undefined) {
+            f(res);
+        }
+    });
+    wemreq.write(util.format(wemreq_template, enable));
+    wemreq.end();
+}
 
-        });
-        newreq.write(contents);
-        newreq.end();
-    }
+exports.tr_enable = function(req, res) {
+    reqlog(logfile, req, 'tr_enable');
+    res.sendStatus(200);
+
+    wemtransformer(1, function(res) {
+        if (req.body.response_url != undefined) {
+            var urlobject = url.parse(req.body.response_url);
+            var contents = '{"text":"Transformer Enabled OK"}';
+            if (res.statusCode != 200) {
+               contents = '{"text":"Transformer Enabled failed"}'; 
+            }
+            var options = {
+                host:urlobject.host,
+                path:urlobject.path,
+                method:'POST',
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            };
+            fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
+            fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
+            fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
+            
+            var newreq = http.request(options, function(res) {
+                fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
+
+            });
+            newreq.write(contents);
+            newreq.end();
+        }
+    });
+
 };
 
 exports.tr_disable = function(req, res) {
     reqlog(logfile, req, 'tr_disable');
     res.sendStatus(200);
-    if (req.body.response_url != undefined) {
-        var urlobject = url.parse(req.body.response_url);
-        var contents = '{"text":"tr_disable handled OK"}';
-        var options = {
-            host:urlobject.host,
-            path:urlobject.path,
-            method:'POST',
-            headers:{
-                "Content-Type": "application/json"
-            }
-        };
-        fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
-        fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
-        fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
-        
-        var newreq = http.request(options, function(res) {
-            fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
 
-        });
-        newreq.write(contents);
-        newreq.end();
-    }
+    wemtransformer(0, function(res) {
+        if (req.body.response_url != undefined) {
+            var urlobject = url.parse(req.body.response_url);
+            var contents = '{"text":"Transformer Disabled OK"}';
+            if (res.statusCode != 200) {
+               contents = '{"text":"Transformer Disabled failed"}'; 
+            }
+            var options = {
+                host:urlobject.host,
+                path:urlobject.path,
+                method:'POST',
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            };
+            fs.writeFileSync(logfile, "\n------------------> options <-------------------------\n", {flag:'a+'});
+            fs.writeFileSync(logfile, JSON.stringify(options), {flag:'a+'});
+            fs.writeFileSync(logfile, "\n------------------> options end <-------------------------\n", {flag:'a+'});
+            
+            var newreq = http.request(options, function(res) {
+                fs.writeFileSync(logfile, util.format("\n------------------> res status(%d)\n", res.statusCode), {flag:'a+'});
+
+            });
+            newreq.write(contents);
+            newreq.end();
+        }
+    });
 };
 
 exports.welcome = function(req, res) {
