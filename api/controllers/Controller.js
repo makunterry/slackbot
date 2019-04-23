@@ -111,6 +111,10 @@ exports.tr_status = function(req, res) {
     res.sendStatus(200);
 
     https.get(wemreq_url, function(res) {
+        fs.writeFileSync(logfile, "\n------------------> tr_status res.body <-------------------------\n", {flag:'a+'});
+        fs.writeFileSync(logfile, JSON.stringify(res.body), {flag:'a+'});
+        fs.writeFileSync(logfile, "\n------------------> tr_status res.body end <-------------------------\n", {flag:'a+'});
+
         if (req.body.response_url != undefined) {
             var urlobject = url.parse(req.body.response_url);
             var contents = '{"text":"Transformer Status: Enabled"}';
